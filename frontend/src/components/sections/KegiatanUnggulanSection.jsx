@@ -61,7 +61,9 @@ export default function KegiatanUnggulanSection() {
       <div className="kegiatan-inner">
         <span className="kegiatan-eyebrow">Dokumentasi</span>
         <h2 className="kegiatan-title">Kegiatan Unggulan</h2>
-
+        <p className="kegiatan-subtitle">
+          Momen-momen berharga dari berbagai kegiatan pembelajaran dan aktivitas siswa di sekolah kami.
+        </p>
         <div className="kegiatan-carousel">
           <div className="kegiatan-viewport">
             <div

@@ -1387,3 +1387,12 @@ body {
     flex: 0 0 100%;
   }
 }
+
+.kegiatan-subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  margin: -24px auto 40px;
+  font-size: 15px;
+  line-height: 1.7;
+}

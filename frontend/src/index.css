@@ -1214,7 +1214,7 @@ body {
   font-weight: 800;
   text-align: center;
   margin: 0 0 14px;
-  color: #16a34a;
+  color: var(--pub-text);
 }
 
 .strategi-subtitle {

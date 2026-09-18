@@ -18,7 +18,7 @@ const formatDate = (iso) => {
   });
 };
 
-export default function ManageHeroTab() {
+export default function ManageHeroTab({ aspectRatio = '16 / 6', aspectLabel = '' }) {
   const { showToast } = useToast();
   const confirm = useConfirm();
   const [slides, setSlides] = useState([]);
@@ -175,9 +175,15 @@ export default function ManageHeroTab() {
 
   return (
     <div>
+      <h2 className="page-title">Banner</h2>
+      <p className="page-subtitle">
+        Kelola gambar banner yang tampil di halaman Beranda.
+        {aspectLabel && ` Rasio disarankan: ${aspectLabel}`}
+      </p>
+
       <div className="table-toolbar">
         <div className="search-box">
-          <Search size={16} color="var(--color-text-muted)" />
+          <Search size={16} color="var(--adm-text-muted)" />
           <input placeholder="Cari ID..." value={search} onChange={handleSearchChange} />
         </div>
         <div className="table-toolbar-right">
@@ -230,7 +236,9 @@ export default function ManageHeroTab() {
               </td>
               <td>{formatDate(slide.created_at)}</td>
               <td>
-                <img src={slide.image_url} alt="" className="table-thumb" />
+                <div className="table-thumb-ratio" style={{ aspectRatio }}>
+                  <img src={slide.image_url} alt="" />
+                </div>
               </td>
               <td>
                 <ToggleSwitch checked={slide.is_active} onChange={() => toggleActive(slide)} showLabel />
@@ -249,7 +257,7 @@ export default function ManageHeroTab() {
           ))}
           {pageItems.length === 0 && (
             <tr>
-              <td colSpan={5} style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>
+              <td colSpan={5} style={{ textAlign: 'center', color: 'var(--adm-text-muted)' }}>
                 Belum ada banner.
               </td>
             </tr>
@@ -258,7 +266,12 @@ export default function ManageHeroTab() {
       </table>
 
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Tambah Banner">
-        {createPreview && <img src={createPreview} alt="Preview" className="image-preview" />}
+        {createPreview && (
+          <div className="image-preview-box" style={{ aspectRatio }}>
+            <img src={createPreview} alt="Preview" />
+          </div>
+        )}
+        {aspectLabel && <span className="image-preview-caption">Rasio disarankan: {aspectLabel}</span>}
         <div className="form-group">
           <label>Gambar</label>
           <input type="file" accept="image/*" onChange={handleCreateFileChange} />
@@ -269,7 +282,12 @@ export default function ManageHeroTab() {
       </Modal>
 
       <Modal open={!!editSlide} onClose={() => setEditSlide(null)} title="Edit Banner">
-        {editPreview && <img src={editPreview} alt="Preview" className="image-preview" />}
+        {editPreview && (
+          <div className="image-preview-box" style={{ aspectRatio }}>
+            <img src={editPreview} alt="Preview" />
+          </div>
+        )}
+        {aspectLabel && <span className="image-preview-caption">Rasio disarankan: {aspectLabel}</span>}
         <div className="form-group">
           <label>Ganti Gambar (opsional)</label>
           <input type="file" accept="image/*" onChange={handleEditFileChange} />

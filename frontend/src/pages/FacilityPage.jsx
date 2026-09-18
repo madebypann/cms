@@ -1,9 +1,9 @@
-import PublicGalleryGrid from '../components/PublicGalleryGrid';
+import FasilitasSection from '../components/sections/FasilitasSection';
 
 export default function FacilityPage() {
   return (
     <div>
-      <PublicGalleryGrid category="fasilitas" title="Fasilitas Sekolah" />
+      <FasilitasSection />
     </div>
   );
 }

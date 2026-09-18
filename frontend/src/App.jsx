@@ -10,7 +10,7 @@ import LoginPage from './pages/admin/LoginPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import DashboardPage from './pages/admin/DashboardPage';
 import ContentCategoryPage from './pages/admin/ContentCategoryPage';
-import ManageTextPage from './pages/admin/ManageTextPage';
+import TextSectionPage from './pages/admin/TextSectionPage';
 
 import AboutPage from './pages/AboutPage';
 import AcademicPage from './pages/AcademicPage';
@@ -49,7 +49,8 @@ export default function App() {
                 <Route index element={<DashboardPage />} />
                 <Route path="content" element={<Navigate to="/controlpanel/content/banner" replace />} />
                 <Route path="content/:category" element={<ContentCategoryPage />} />
-                <Route path="text" element={<ManageTextPage />} />
+                <Route path="text" element={<Navigate to="/controlpanel/text/visi_misi" replace />} />
+                <Route path="text/:sectionKey" element={<TextSectionPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

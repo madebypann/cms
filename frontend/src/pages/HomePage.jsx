@@ -1,7 +1,7 @@
 import PublicHeroSlider from '../components/PublicHeroSlider';
 import StrategiPembelajaranSection from '../components/sections/StrategiPembelajaranSection';
 import KegiatanUnggulanSection from '../components/sections/KegiatanUnggulanSection';
-import PublicContactPlaceholder from '../components/PublicContactPlaceholder';
+import ContactSection from '../components/sections/ContactSection';
 
 export default function HomePage() {
   return (
@@ -9,7 +9,7 @@ export default function HomePage() {
       <PublicHeroSlider />
       <StrategiPembelajaranSection />
       <KegiatanUnggulanSection />
-      <PublicContactPlaceholder />
+      <ContactSection />
     </div>
   );
 }

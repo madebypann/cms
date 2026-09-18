@@ -55,7 +55,7 @@ router.get('/all', requireAuth, async (req, res) => {
 // POST /api/galleries -> upload foto baru ke kategori tertentu
 router.post('/', requireAuth, upload.single('image'), async (req, res) => {
   try {
-    const { category, title, description } = req.body;
+    const { category, title, description, redirect_url } = req.body;
     const file = req.file;
 
     if (!category) {
@@ -82,6 +82,7 @@ router.post('/', requireAuth, upload.single('image'), async (req, res) => {
         category,
         title: title || null,
         description: description || null,
+        redirect_url: redirect_url || null,
         image_url: urlData.publicUrl,
         image_path: filePath,
       })
@@ -99,11 +100,11 @@ router.post('/', requireAuth, upload.single('image'), async (req, res) => {
 // PUT /api/galleries/:id -> update teks/status (tanpa ganti gambar)
 router.put('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, description, is_active, category } = req.body;
+  const { title, description, is_active, category, redirect_url } = req.body;
 
   const { data, error } = await supabaseAdmin
     .from('galleries')
-    .update({ title, description, is_active, category })
+    .update({ title, description, is_active, category, redirect_url })
     .eq('id', id)
     .select()
     .single();

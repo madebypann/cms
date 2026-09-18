@@ -18,9 +18,20 @@ const formatDate = (iso) => {
   });
 };
 
-export default function ManageGalleryTab({ category, label, hasDescription = true }) {
+export default function ManageGalleryTab({ category, config }) {
+  const {
+    label,
+    hasDescription = true,
+    hasRedirect = false,
+    titleLabel = 'Judul',
+    descriptionLabel = 'Deskripsi',
+    aspectRatio = '4 / 3',
+    aspectLabel = '',
+  } = config;
+
   const { showToast } = useToast();
   const confirm = useConfirm();
+
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -31,6 +42,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
   const [createOpen, setCreateOpen] = useState(false);
   const [createTitle, setCreateTitle] = useState('');
   const [createDesc, setCreateDesc] = useState('');
+  const [createRedirect, setCreateRedirect] = useState('');
   const [createFile, setCreateFile] = useState(null);
   const [createPreview, setCreatePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -38,6 +50,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
   const [editItem, setEditItem] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDesc, setEditDesc] = useState('');
+  const [editRedirect, setEditRedirect] = useState('');
   const [editFile, setEditFile] = useState(null);
   const [editPreview, setEditPreview] = useState(null);
   const [savingEdit, setSavingEdit] = useState(false);
@@ -71,6 +84,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
   const openCreate = () => {
     setCreateTitle('');
     setCreateDesc('');
+    setCreateRedirect('');
     setCreateFile(null);
     setCreatePreview(null);
     setCreateOpen(true);
@@ -89,6 +103,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
     formData.append('category', category);
     formData.append('title', createTitle);
     formData.append('description', createDesc);
+    formData.append('redirect_url', createRedirect);
 
     setUploading(true);
     try {
@@ -107,6 +122,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
     setEditItem(item);
     setEditTitle(item.title || '');
     setEditDesc(item.description || '');
+    setEditRedirect(item.redirect_url || '');
     setEditFile(null);
     setEditPreview(item.image_url);
   };
@@ -120,7 +136,11 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
   const handleEditSubmit = async () => {
     setSavingEdit(true);
     try {
-      await api.put(`/galleries/${editItem.id}`, { title: editTitle, description: editDesc });
+      await api.put(`/galleries/${editItem.id}`, {
+        title: editTitle,
+        description: editDesc,
+        redirect_url: editRedirect,
+      });
 
       if (editFile) {
         const formData = new FormData();
@@ -158,11 +178,8 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
     const allSelected = pageIds.every((id) => selectedIds.has(id));
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (allSelected) {
-        pageIds.forEach((id) => next.delete(id));
-      } else {
-        pageIds.forEach((id) => next.add(id));
-      }
+      if (allSelected) pageIds.forEach((id) => next.delete(id));
+      else pageIds.forEach((id) => next.add(id));
       return next;
     });
   };
@@ -189,9 +206,12 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
 
   return (
     <div>
+      <h2 className="page-title">{label}</h2>
+      {aspectLabel && <p className="page-subtitle">Rasio foto yang disarankan: {aspectLabel}</p>}
+
       <div className="table-toolbar">
         <div className="search-box">
-          <Search size={16} color="var(--color-text-muted)" />
+          <Search size={16} color="var(--adm-text-muted)" />
           <input placeholder="Cari judul..." value={search} onChange={handleSearchChange} />
         </div>
         <div className="table-toolbar-right">
@@ -228,7 +248,7 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
             </th>
             <th>Created At</th>
             <th>Foto</th>
-            <th>Judul & Deskripsi</th>
+            <th>{titleLabel}{hasDescription ? ` & ${descriptionLabel}` : ''}</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
@@ -237,15 +257,13 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
           {pageItems.map((item) => (
             <tr key={item.id}>
               <td className="checkbox-cell">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.has(item.id)}
-                  onChange={() => toggleSelectOne(item.id)}
-                />
+                <input type="checkbox" checked={selectedIds.has(item.id)} onChange={() => toggleSelectOne(item.id)} />
               </td>
               <td>{formatDate(item.created_at)}</td>
               <td>
-                <img src={item.image_url} alt="" className="table-thumb" />
+                <div className="table-thumb-ratio" style={{ aspectRatio }}>
+                  <img src={item.image_url} alt="" />
+                </div>
               </td>
               <td>
                 <strong>{item.title || '(tanpa judul)'}</strong>
@@ -253,6 +271,12 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
                   <>
                     <br />
                     <span style={{ color: 'var(--adm-text-muted)', fontSize: 13 }}>{item.description}</span>
+                  </>
+                )}
+                {hasRedirect && item.redirect_url && (
+                  <>
+                    <br />
+                    <span style={{ color: 'var(--adm-primary)', fontSize: 12 }}>{item.redirect_url}</span>
                   </>
                 )}
               </td>
@@ -273,8 +297,8 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
           ))}
           {pageItems.length === 0 && (
             <tr>
-              <td colSpan={6} style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>
-                Belum ada foto {label.toLowerCase()}.
+              <td colSpan={6} style={{ textAlign: 'center', color: 'var(--adm-text-muted)' }}>
+                Belum ada {label.toLowerCase()}.
               </td>
             </tr>
           )}
@@ -282,15 +306,32 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
       </table>
 
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={`Tambah ${label}`}>
-        {createPreview && <img src={createPreview} alt="Preview" className="image-preview" />}
+        {createPreview && (
+          <div className="image-preview-box" style={{ aspectRatio }}>
+            <img src={createPreview} alt="Preview" />
+          </div>
+        )}
+        {aspectLabel && <span className="image-preview-caption">Rasio disarankan: {aspectLabel}</span>}
+
         <div className="form-group">
-          <label>Judul</label>
+          <label>{titleLabel}</label>
           <input className="form-input" value={createTitle} onChange={(e) => setCreateTitle(e.target.value)} />
         </div>
         {hasDescription && (
           <div className="form-group">
-            <label>Deskripsi</label>
+            <label>{descriptionLabel}</label>
             <textarea className="form-textarea" rows={3} value={createDesc} onChange={(e) => setCreateDesc(e.target.value)} />
+          </div>
+        )}
+        {hasRedirect && (
+          <div className="form-group">
+            <label>Link Redirect</label>
+            <input
+              className="form-input"
+              placeholder="https://contoh.com"
+              value={createRedirect}
+              onChange={(e) => setCreateRedirect(e.target.value)}
+            />
           </div>
         )}
         <div className="form-group">
@@ -303,15 +344,32 @@ export default function ManageGalleryTab({ category, label, hasDescription = tru
       </Modal>
 
       <Modal open={!!editItem} onClose={() => setEditItem(null)} title={`Edit ${label}`}>
-        {editPreview && <img src={editPreview} alt="Preview" className="image-preview" />}
+        {editPreview && (
+          <div className="image-preview-box" style={{ aspectRatio }}>
+            <img src={editPreview} alt="Preview" />
+          </div>
+        )}
+        {aspectLabel && <span className="image-preview-caption">Rasio disarankan: {aspectLabel}</span>}
+
         <div className="form-group">
-          <label>Judul</label>
+          <label>{titleLabel}</label>
           <input className="form-input" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
         </div>
         {hasDescription && (
           <div className="form-group">
-            <label>Deskripsi</label>
+            <label>{descriptionLabel}</label>
             <textarea className="form-textarea" rows={3} value={editDesc} onChange={(e) => setEditDesc(e.target.value)} />
+          </div>
+        )}
+        {hasRedirect && (
+          <div className="form-group">
+            <label>Link Redirect</label>
+            <input
+              className="form-input"
+              placeholder="https://contoh.com"
+              value={editRedirect}
+              onChange={(e) => setEditRedirect(e.target.value)}
+            />
           </div>
         )}
         <div className="form-group">

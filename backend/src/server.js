@@ -9,7 +9,7 @@ const galleryRoutes = require('./routes/galleryRoutes');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173' }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -26,6 +26,10 @@ app.use('/api/content', contentRoutes);
 app.use('/api/hero', heroRoutes);
 app.use('/api/galleries', galleryRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server jalan di http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server jalan di http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

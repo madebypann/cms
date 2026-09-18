@@ -4,6 +4,7 @@ import { LayoutDashboard, Image, FileText, LogOut, ChevronDown, ChevronRight } f
 import { useAuth } from '../../context/AuthContext';
 import Topbar from '../../components/Topbar';
 import { CONTENT_CATEGORIES } from '../../config/contentCategories';
+import { TEXT_SECTIONS } from '../../config/textSections';
 
 export default function AdminLayout() {
   const { logout, user } = useAuth();
@@ -12,6 +13,9 @@ export default function AdminLayout() {
 
   const isContentActive = location.pathname.startsWith('/controlpanel/content');
   const [contentOpen, setContentOpen] = useState(isContentActive);
+
+  const isTextActive = location.pathname.startsWith('/controlpanel/text');
+  const [textOpen, setTextOpen] = useState(isTextActive);
 
   const handleLogout = async () => {
     await logout();
@@ -51,9 +55,26 @@ export default function AdminLayout() {
               </div>
             )}
 
-            <NavLink to="/controlpanel/text" className={linkClass}>
-              <FileText size={16} /> Teks
-            </NavLink>
+            <button
+              type="button"
+              className={`admin-nav-toggle ${isTextActive ? 'active' : ''}`}
+              onClick={() => setTextOpen((prev) => !prev)}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FileText size={16} /> Teks
+              </span>
+              {textOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            </button>
+
+            {textOpen && (
+              <div className="admin-submenu">
+                {TEXT_SECTIONS.map((s) => (
+                  <NavLink key={s.key} to={`/controlpanel/text/${s.key}`} className={linkClass}>
+                    {s.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
           </nav>
 
           <div className="admin-sidebar-footer">

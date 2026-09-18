@@ -1,14 +1,13 @@
-import PublicTextSection from '../components/PublicTextSection';
-import PublicListSection from '../components/PublicListSection';
-import PublicGalleryGrid from '../components/PublicGalleryGrid';
+import SejarahSection from '../components/sections/SejarahSection';
+import VisiMisiSection from '../components/sections/VisiMisiSection';
+import PengurusYayasanSection from '../components/sections/PengurusYayasanSection';
 
 export default function AboutPage() {
   return (
     <div>
-      <PublicTextSection sectionKey="sejarah" title="Sejarah Sekolah" />
-      <PublicTextSection sectionKey="visi" title="Visi" variant="blue" />
-      <PublicListSection sectionKey="misi" title="Misi" variant="stacked" />
-      <PublicGalleryGrid category="pengurus_yayasan" title="Pengurus Yayasan" />
+      <SejarahSection />
+      <VisiMisiSection />
+      <PengurusYayasanSection />
     </div>
   );
 }

@@ -1,10 +1,4 @@
-import { MapPin, Phone } from 'lucide-react';
-import {
-  WHATSAPP_NUMBER,
-  WHATSAPP_DISPLAY,
-  INSTAGRAM_USERNAME,
-  SCHOOL_ADDRESS,
-} from '../config/contactInfo';
+import { WHATSAPP_NUMBER, WHATSAPP_DISPLAY, INSTAGRAM_USERNAME } from '../../config/contactInfo';
 
 function WhatsAppIcon() {
   return (
@@ -24,46 +18,44 @@ function InstagramIcon() {
   );
 }
 
-export default function Footer() {
-  const waLink = `https://wa.me/${WHATSAPP_NUMBER}`;
+export default function ContactSection() {
+  const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo, saya ingin bertanya tentang TKI Baiturrahman')}`;
   const igLink = `https://instagram.com/${INSTAGRAM_USERNAME}`;
 
   return (
-    <footer className="public-footer">
-      <div className="footer-inner">
-        <div className="footer-info">
-          <img src="/logo-white.png" alt="Logo Sekolah" className="footer-logo" />
-          <p className="footer-label">Tentang Kami</p>
-          <p className="footer-desc">
-            TKI Baiturrahman berkomitmen mengedepankan pendidikan agama Islam dan membentuk
-            akhlakul karimah sejak dini bagi putra-putri Anda.
+    <section className="kontak-section" id="kontak">
+      <div className="kontak-wrapper">
+        <div className="kontak-text">
+          <span className="kontak-eyebrow">Hubungi Kami</span>
+          <h2 className="kontak-title">Ada Pertanyaan?</h2>
+          <p className="kontak-desc">
+            Jangan ragu untuk menghubungi kami melalui WhatsApp atau Instagram.
+            Tim kami siap membantu menjawab pertanyaan seputar pendaftaran dan informasi sekolah.
           </p>
-
-          <div className="footer-detail-row">
-            <MapPin size={16} />
-            <span>{SCHOOL_ADDRESS}</span>
-          </div>
-          <div className="footer-detail-row">
-            <Phone size={16} />
-            <span>{WHATSAPP_DISPLAY}</span>
-          </div>
         </div>
 
-        <div className="footer-divider" />
-
-        <div className="footer-social">
-          <a href={waLink} target="_blank" rel="noopener noreferrer" className="footer-social-btn" aria-label="WhatsApp">
-            <WhatsAppIcon />
+        <div className="kontak-buttons">
+          <a href={waLink} target="_blank" rel="noopener noreferrer" className="kontak-btn kontak-btn-whatsapp">
+            <span className="kontak-btn-icon">
+              <WhatsAppIcon />
+            </span>
+            <span className="kontak-btn-label">
+              WhatsApp
+              <small>{WHATSAPP_DISPLAY}</small>
+            </span>
           </a>
-          <a href={igLink} target="_blank" rel="noopener noreferrer" className="footer-social-btn" aria-label="Instagram">
-            <InstagramIcon />
+
+          <a href={igLink} target="_blank" rel="noopener noreferrer" className="kontak-btn kontak-btn-instagram">
+            <span className="kontak-btn-icon">
+              <InstagramIcon />
+            </span>
+            <span className="kontak-btn-label">
+              Instagram
+              <small>@{INSTAGRAM_USERNAME}</small>
+            </span>
           </a>
         </div>
       </div>
-
-      <div className="footer-bottom">
-        © {new Date().getFullYear()} TKI Baiturrahman. Semua hak dilindungi.
-      </div>
-    </footer>
+    </section>
   );
 }

@@ -12,8 +12,8 @@ export default function ContentCategoryPage() {
   }
 
   if (category === 'banner') {
-    return <ManageHeroTab />;
+    return <ManageHeroTab aspectRatio={found.aspectRatio} aspectLabel={found.aspectLabel} />;
   }
 
-  return <ManageGalleryTab category={category} label={found.label} hasDescription={found.hasDescription} />;
+  return <ManageGalleryTab category={category} config={found} />;
 }
